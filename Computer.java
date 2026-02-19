@@ -38,6 +38,10 @@ public class Computer {
     public String getDisk() {
         return this.disk;
     }
-
+    
+    public String toString() {
+        return "Type:Desktop\tCPU:" + this.CPU + "\tRAM:" + this.RAM + "\tDisk:" + this.disk;
+    }
+    
 
 }

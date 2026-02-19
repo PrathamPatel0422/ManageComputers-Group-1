@@ -1,17 +1,15 @@
 //Laptop computer: adds screen size to other Computer info
 
-public class Laptop extends Computer { //Laptop inherits from Computer
+public class Laptop{
     String screenSize=null;
-
+    Computer computer = null;  // Composition
+    
     //Constructors
     public Laptop() {} //No-arg constructor
 
     public Laptop(String CPU, String RAM, String disk, String screenSize) {
-        //Inherited from Computer superclass
-        this.CPU=CPU;
-        this.RAM=RAM;
-        this.disk=disk;
-
+        //Composition from Computer superclass
+    	computer = new Computer(CPU, RAM, disk);
         //Only in Laptop subclass
         this.screenSize=screenSize;
     }
@@ -26,9 +24,10 @@ public class Laptop extends Computer { //Laptop inherits from Computer
         return this.screenSize;
     }
 
-    //Return formatted version of data
+    //Return formatted version of data 
+    @Override
     public String toString() {
-        return "Type:Laptop\tCPU:" + this.CPU + "\tRAM:" + this.RAM + "\tDisk:" + this.disk + "\tScreen:" + this.screenSize;
+        return computer.toString() + "\tGPU:"  + "\tScreen:" + this.screenSize;
     }
     
 }
