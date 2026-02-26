@@ -6,7 +6,7 @@ public class Laptop extends Computer {
 
     // Constructor
     public Laptop(String CPU, String RAM, String disk, String screenSize) {
-        super(CPU, RAM, disk);   // Call Computer constructor
+        super(CPU, RAM, disk);   
         this.screenSize = screenSize;
     }
 
