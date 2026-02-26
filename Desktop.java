@@ -6,7 +6,7 @@ public class Desktop extends Computer {
 
     // Constructor
     public Desktop(String CPU, String RAM, String disk, String GPUType) {
-        super(CPU, RAM, disk);   // Call Computer constructor
+        super(CPU, RAM, disk);  
         this.GPUType = GPUType;
     }
 
