@@ -25,4 +25,9 @@ public class Computer {
     public String getDisk() {
         return this.disk;
     }
+
+    @Override
+    public String toString() {
+        return "CPU:" + CPU + "\tRAM:" + RAM + "\tDisk:" + disk;
+    }
 }
