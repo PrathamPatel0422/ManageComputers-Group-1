@@ -8,17 +8,17 @@ public class ManageComputers {
 
     public static void main(String args[]) {
 
-        //This ArrayList will hold all the computers in the system. Note that the type of objects expected in this
-        //ArrayList are Computer, not Laptop or Desktop, but since those are subclasses of Computer they can be
-        //stored in an ArrayLiust<Computer> anyway.
-        ArrayList<Computer> computers = new ArrayList<Computer>(); 
+    //This ArrayList will hold Laptop and Desktop objects. 
+    //Laptop and Desktop use composition.
+    //Store them as Object.
+    ArrayList<Object> computers = new ArrayList<Object>(); 
 
         Scanner s = new Scanner(System.in);
         String menuOption="";
 
         do { //Start of main program loop
 
-            //Show computer data in ArrayList<Computer>
+            //Show computer data in ArrayList<Object>
             showComputers(computers); 
 
             //Display menu and return menu option selected by the user
@@ -77,15 +77,15 @@ public class ManageComputers {
     } //End of getMenuSelection
 
     //-----------------------------
-    //Show data for all laptops and desktops stored in ArrayList<Computer> create in main() method
-    private static void showComputers(ArrayList<Computer> computers) {
+    //Show data for all laptops and desktops stored in ArrayList<Object> create in main() method
+    private static void showComputers(ArrayList<Object> computers) {
         int computerListNumber=0; //This variable is used to hold the "list number" for each computer, starting at 1.
 
         System.out.println("=========");
 
         System.out.println("LIST OF COMPUTERS:-");
 
-        for (Computer c: computers) {
+        for (Object c : computers) {
 
             computerListNumber++; //Increment list number for each computer
 
@@ -98,8 +98,8 @@ public class ManageComputers {
     } //End of showComputers
 
     //-----------------------------
-    //Add a new Laptop or Desktop computer to the ArrayList<Computer>
-    private static void addComputer(ArrayList<Computer> computers, Scanner s) {
+    //Add a new Laptop or Desktop computer to the ArrayList<Object>
+    private static void addComputer(ArrayList<Object> computers, Scanner s) {
         String computerType="";
 
         Computer tempComputer=null;
@@ -150,7 +150,7 @@ public class ManageComputers {
 
     //-----------------------------
     //Delete a specified computer from the ArrayList
-    private static void deleteComputer(ArrayList<Computer> computers, Scanner s) {
+    private static void deleteComputer(ArrayList<Object> computers, Scanner s) {
         int computerListNumberToDelete=0;
 
         System.out.println("DELETE COMPUTER:-");
@@ -170,9 +170,9 @@ public class ManageComputers {
     } //End of deleteComputer
 
     //-----------------------------
-    //Edit a computer. Since Laptop and Desktop are mutable classses/object get new data values and replace old
-    //attribute values in object being edited using object setter methods
-    private static void editComputer(ArrayList<Computer> computers, Scanner s) {
+    //Edit a computer. Laptop and Desktop are now immutable using composition. 
+    //Create a new object with updated values and replace the existing object in the list.
+    private static void editComputer(ArrayList<Object> computers, Scanner s) {
         int computerListNumberToEdit=0;
         String computerType="";
         Computer tempComputer=null;
@@ -185,14 +185,13 @@ public class ManageComputers {
         //Check that computerListNumberToEdit is valid first
         if (computerListNumberToEdit>=1 && computerListNumberToEdit<=computers.size()) {
 
+            Object obj = computers.get(computerListNumberToEdit - 1);
+
             //Determine exact type of computer being edited
-            //Subtract 1 to get ArrayList index from on-screen list number
-            if (computers.get(computerListNumberToEdit-1) instanceof Laptop) { 
-                computerType="laptop";
-            }
-            //Subtract 1 to get ArrayList index from on-screen list number
-            else if (computers.get(computerListNumberToEdit-1) instanceof Desktop) { 
-                computerType="desktop";
+            if (obj instanceof Laptop) {
+                computerType = "laptop";
+            } else if (obj instanceof Desktop) {
+                computerType = "desktop";
             }
 
         
@@ -210,19 +209,13 @@ public class ManageComputers {
                     System.out.print("Enter screen size:");
                     String screenSize = s.nextLine();
 
-                    //Get reference to the object in ArrayList<Computer> to edit
-                    //Cast Computer to Laptop for setScreenSize call a few lines of code later
-                    Laptop laptopToEdit = (Laptop)computers.get(computerListNumberToEdit-1);
-
-                    //Use setter methods to change mutable object state
-                    laptopToEdit.setCPU(tempComputer.getCPU());
-                    laptopToEdit.setRAM(tempComputer.getRAM());
-                    laptopToEdit.setDisk(tempComputer.getDisk());
-                    laptopToEdit.setScreenSize(screenSize);
+                    // Create a new Laptop with updated values and replace the existing one in the list
+                    Laptop newLaptop = new Laptop(tempComputer.getCPU(), tempComputer.getRAM(), tempComputer.getDisk(), screenSize);
+                    computers.set(computerListNumberToEdit - 1, newLaptop);
 
                     break;
 
-                //Editing a desktop, store in temporary Computer-type object
+                //Editing a desktop
                 case "desktop": 
 
                     System.out.println("Editing a Desktop:");
@@ -233,15 +226,9 @@ public class ManageComputers {
                     System.out.print("Enter GPU:");
                     String GPUType = s.nextLine();
 
-                    //Get reference to the object in ArrayList<Computer> to edit
-                    //Cast Computer to Laptop for setScreenSize call a few lines of code later
-                    Desktop desktopToEdit = (Desktop)computers.get(computerListNumberToEdit-1);
-
-                    //Use setter methods to change mutable object state
-                    desktopToEdit.setCPU(tempComputer.getCPU());
-                    desktopToEdit.setRAM(tempComputer.getRAM());
-                    desktopToEdit.setDisk(tempComputer.getDisk());
-                    desktopToEdit.setGPUType(GPUType);
+                    //Create a new Desktop with updated values and replace the existing one in the list
+                    Desktop newDesktop = new Desktop(tempComputer.getCPU(), tempComputer.getRAM(), tempComputer.getDisk(), GPUType);
+                    computers.set(computerListNumberToEdit - 1, newDesktop);
 
                     break;
 
