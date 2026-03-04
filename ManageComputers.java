@@ -5,13 +5,19 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ManageComputers {
+    // Whitelist values for validation
+    private static final String[] CPU_WHITELIST = {"i5", "i7"};
+    private static final String[] RAM_WHITELIST = {"16", "32"};
+    private static final String[] DISK_WHITELIST = {"512", "1024"};
+    private static final String[] GPU_WHITELIST = {"Nvidia", "AMD"};
+    private static final String[] SCREEN_WHITELIST = {"13", "14"};
 
     public static void main(String args[]) {
 
-    //This ArrayList will hold Laptop and Desktop objects. 
-    //Laptop and Desktop use composition.
-    //Store them as Object.
-    ArrayList<Object> computers = new ArrayList<Object>(); 
+        //This ArrayList will hold Laptop and Desktop objects. 
+        //Laptop and Desktop use composition.
+        //Store them as Object.
+        ArrayList<Object> computers = new ArrayList<Object>(); 
 
         Scanner s = new Scanner(System.in);
         String menuOption="";
@@ -118,8 +124,7 @@ public class ManageComputers {
                 //Get CPU, RAM and Disk info
                 tempComputer = getComputerData(s); 
 
-                System.out.print("Enter screen size:");
-                String screenSize = s.nextLine();
+                String screenSize = getValidatedInput(s, "Enter screen size (13/14): ", SCREEN_WHITELIST);
 
                 //Add new Laptop to ArrayList in main() method
                 computers.add(new Laptop(tempComputer.getCPU(),tempComputer.getRAM(),tempComputer.getDisk(),screenSize)); 
@@ -132,8 +137,7 @@ public class ManageComputers {
             //Get CPU, RAM and Disk info
                 tempComputer = getComputerData(s); 
 
-                System.out.print("Enter GPU:");
-                String GPUType = s.nextLine();
+                String GPUType = getValidatedInput(s, "Enter GPU (Nvidia/AMD): ", GPU_WHITELIST);
 
                 //Add new Desktop to ArrayList in main() method
                 computers.add(new Desktop(tempComputer.getCPU(),tempComputer.getRAM(),tempComputer.getDisk(),GPUType)); 
@@ -206,8 +210,7 @@ public class ManageComputers {
                     //Get CPU, RAM and Disk info, store in temporary Computer-type object
                     tempComputer = getComputerData(s); 
 
-                    System.out.print("Enter screen size:");
-                    String screenSize = s.nextLine();
+                    String screenSize = getValidatedInput(s, "Enter screen size (13/14): ", SCREEN_WHITELIST);
 
                     // Create a new Laptop with updated values and replace the existing one in the list
                     Laptop newLaptop = new Laptop(tempComputer.getCPU(), tempComputer.getRAM(), tempComputer.getDisk(), screenSize);
@@ -223,8 +226,7 @@ public class ManageComputers {
                     //Get CPU, RAM and Disk info
                     tempComputer = getComputerData(s); 
 
-                    System.out.print("Enter GPU:");
-                    String GPUType = s.nextLine();
+                    String GPUType = getValidatedInput(s, "Enter GPU (Nvidia/AMD): ", GPU_WHITELIST);
 
                     //Create a new Desktop with updated values and replace the existing one in the list
                     Desktop newDesktop = new Desktop(tempComputer.getCPU(), tempComputer.getRAM(), tempComputer.getDisk(), GPUType);
@@ -250,18 +252,41 @@ public class ManageComputers {
         String RAM="";
         String disk="";
 
-        System.out.print("Enter CPU:");
-        CPU = s.nextLine();
-
-        System.out.print("Enter RAM:");
-        RAM = s.nextLine();
-
-        System.out.print("Enter Disk:");
-        disk = s.nextLine();
+        CPU = getValidatedInput(s, "Enter CPU (i5/i7): ", CPU_WHITELIST);
+        RAM = getValidatedInput(s, "Enter RAM (16/32): ", RAM_WHITELIST);
+        disk = getValidatedInput(s, "Enter Disk (512/1024): ", DISK_WHITELIST);
 
         return new Computer(CPU,RAM,disk);
 
     } //End of getComputerData
+
+        //-----------------------------
+    // Helper method for whitelist validation
+    private static String getValidatedInput(Scanner s, String prompt, String[] whitelist) {
+        String input;
+        boolean valid;
+
+        do {
+            System.out.print(prompt);
+            input = s.nextLine();
+            valid = false;
+
+            for (String allowed : whitelist) {
+                if (allowed.equalsIgnoreCase(input)) {
+                    valid = true;
+                    input = allowed; // normalize value to whitelist version
+                    break;
+                }
+            }
+
+            if (!valid) {
+                System.out.println("Invalid input. Please enter one of the allowed values.");
+            }
+
+        } while (!valid);
+
+        return input;
+    }
 
 
 } //End of ManageComputer class
